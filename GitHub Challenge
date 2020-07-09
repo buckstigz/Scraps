@@ -1,0 +1,142 @@
+```bash
+
+[ec2-user@ip-10-0-1-21 cloudacademy]$ cd /cloudacademy/lab
+# moves to directory path stated in lab
+[ec2-user@ip-10-0-1-21 lab]$ origin_url=$(aws ec2 describe-instances --region us-west-2 --filters "Name=tag:Name,Values=K8s Config Remote" --query "Reservations[0].Instances[0].PublicDnsName" | sed 's/"\(.*\)"/git:\/\/\1\/lab.git/')"
+# this creates a variable $origin_url where an empty git repository is situated, this variable we need to use later.
+[ec2-user@ip-10-0-1-21 lab]$ ls
+package.json server.js
+# listing the files that are loaded on the IDE
+[ec2-user@ip-10-0-1-21 lab]$ git init
+Reinitialized existing Git repository in /cloudacademy/lab/.git/
+# initialised git repository <- unsure if this was needed but git ran properly after this so would recommend doing it
+[ec2-user@ip-10-0-1-21 lab]$ git add .
+# adds all files to the repo -> the . just means everything
+[ec2-user@ip-10-0-1-21 lab]$ git commit -a -m ""Add Files"
+# commits the files to staging area DO NOT FORGET -m AND A MESSAGE WITH THE COMMIT
+[master (root-commit) 609e194] Add files Committer: EC2 Default User <[ec2-user@ip-10-0-1-21.us-west-2.compute.internal](mailto:ec2-user@ip-10-0-1-21.us-west-2.compute.internal)>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file: git config --global --edit
+After doing this, you may fix the identity used this commit with: git commit --amend --reset-author 2 files changed, 29 insertions(+) create mode 100644 package.json create mode 100644 server.js
+[ec2-user@ip-10-0-1-21 lab]$ git remote add origin $origin_url
+# this is where we use that variable that was created at the beginning of the code. We create a remote repository called origin and the variable is where it points to.
+[ec2-user@ip-10-0-1-21 lab]$ git remote
+origin
+# making sure i have a remote called origin and it worked
+[ec2-user@ip-10-0-1-21 lab]$ git branch
+* master
+# checking that i have a master branch in this remote, double checking it woked essentially.
+[ec2-user@ip-10-0-1-21 lab]$ git log --oneline
+609e194 (HEAD -> master) Add files
+# making sure that my previous commit was made to the master branch in origin (it was!)
+[ec2-user@ip-10-0-1-21 lab]$ git checkout -b branch_one
+Switched to a new branch 'branch_one'
+# creating a new branch and switching to it
+[ec2-user@ip-10-0-1-21 lab]$ ls
+package.json server.js
+# making sure i didn't fuck up anywhere and loose my files
+[ec2-user@ip-10-0-1-21 lab]$ nano server.js
+# enters into bash text file editor to edit the typo in the file! this basically opens the file in the terminal, you can only use your keyboard to navigate to edit it. make sure to CTRL + X to exit out of nano, y to save, and enter to save it using the correct file name.
+[ec2-user@ip-10-0-1-21 lab]$ cat server.js
+# this reads the file out in the terminal, me double checking that the edit saved correctly.
+'use strict';
+const express = require('express');
+// Constants
+const PORT = 8001;
+const HOST = '0.0.0.0';
+// App
+const app = express();
+app.get('/', (req, res) => { res.send('Hello, World');
+});
+app.listen(PORT, HOST);
+console.log();
+[ec2-user@ip-10-0-1-21 lab]$ git add .
+# add the files now they have been edited
+[ec2-user@ip-10-0-1-21 lab]$ git commit -m "Fixed errors in file"
+# commit to staging area in branch_one with a lil note with what I did
+[branch_one 8848529] Fixed errors in file Committer: EC2 Default User <[ec2-user@ip-10-0-1-21.us-west-2.compute.internal](mailto:ec2-user@ip-10-0-1-21.us-west-2.compute.internal)>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file: git config --global --edit
+After doing this, you may fix the identity used this commit with: git commit --amend --reset-author 1 file changed, 1 insertion(+), 1 deletion(-)
+[ec2-user@ip-10-0-1-21 lab]$ git log --oneline
+# check using --oneline that the commit went through to the correct branch!
+8848529 (HEAD -> branch_one) Fixed errors in file
+609e194 (master) Add files
+[ec2-user@ip-10-0-1-21 lab]$ git checkout master
+Switched to branch 'master'
+# switched to master branch
+[ec2-user@ip-10-0-1-21 lab]$ git branch branch_one
+* master
+# listed branches to make sure i was in master (the one with the asterik is where i am!)
+[ec2-user@ip-10-0-1-21 lab]$ git merge branch_one
+# merged branch_one with the master branch. make sure you're in the branch that you want to be merged to, not the one your merging from! (if that makes sense)
+Updating 609e194..8848529
+Fast-forward server.js | 2 +- 1 file changed, 1 insertion(+), 1 deletion(-)
+[ec2-user@ip-10-0-1-21 lab]$ git branch branch_one
+* master
+[ec2-user@ip-10-0-1-21 lab]$ git push origin master
+# pushed the changes to the origin repo!
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 2 threads
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (7/7), 850 bytes | 850.00 KiB/s, done.
+Total 7 (delta 2), reused 0 (delta 0)
+To [git://ec2-35-165-36-127.us-west-2.compute.amazonaws.com/lab.git](git://ec2-35-165-36-127.us-west-2.compute.amazonaws.com/lab.git) * [new branch] master -> master
+[ec2-user@ip-10-0-1-21 lab]$ git checkout -b branch_two
+# created new branch
+Switched to a new branch 'branch_two'
+[ec2-user@ip-10-0-1-21 lab]$ cat server.js
+#here I'm reading the file to make sure that there is a port function in the .js file
+'use strict';
+const express = require('express');
+// Constants
+const PORT = 8001; # <- this here is your port function that needs to be edited (exactly like last time!)
+const HOST = '0.0.0.0';
+// App
+const app = express();
+app.get('/', (req, res) => { res.send('Hello, World');
+});
+app.listen(PORT, HOST);
+console.log();
+[ec2-user@ip-10-0-1-21 lab]$ nano server.js
+# edited the port in code to 8000
+[ec2-user@ip-10-0-1-21 lab]$ git add .
+# added all files
+[ec2-user@ip-10-0-1-21 lab]$ git commit -m "Port changed"
+# commited to new branch with comment (never forget the comment!)
+[branch_two 7414b6d] Port changed Committer: EC2 Default User <[ec2-user@ip-10-0-1-21.us-west-2.compute.internal](mailto:ec2-user@ip-10-0-1-21.us-west-2.compute.internal)>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file: git config --global --edit
+After doing this, you may fix the identity used this commit with: git commit --amend --reset-author 1 file changed, 1 insertion(+), 1 deletion(-)
+[ec2-user@ip-10-0-1-21 lab]$ git checkout master
+# switched to master branch
+Switched to branch 'master'
+[ec2-user@ip-10-0-1-21 lab]$ git branch
+# made sure i was in master branch_one branch_two
+* master
+[ec2-user@ip-10-0-1-21 lab]$ git merge branch_two
+# merged new branch to master
+Updating 8848529..7414b6d
+Fast-forward server.js | 2 +- 1 file changed, 1 insertion(+), 1 deletion(-)
+[ec2-user@ip-10-0-1-21 lab]$ git push origin master
+# pushed all my changes to the repo now that they had taken effect on the master branch!
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 2 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 342 bytes | 342.00 KiB/s, done.
+Total 3 (delta 1), reused 0 (delta 0)
+To [git://ec2-35-165-36-127.us-west-2.compute.amazonaws.com/lab.git](git://ec2-35-165-36-127.us-west-2.compute.amazonaws.com/lab.git) 8848529..7414b6d master -> master
+# then validate your changes on the right.
+# after doing this i went to [https://help.github.com/en/github/using-git](https://help.github.com/en/github/using-git) and just brushed up on remote repositories because i blanked on how to use them.
+```
