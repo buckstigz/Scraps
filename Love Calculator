@@ -1,0 +1,49 @@
+ #!/bin/python3
+
+# alphabet = 'abcdefghijklmnopqrstuvwxyz'
+# keyInput = input('Please enter a key: ')
+# key = int(keyInput)
+# newMessage = ''
+
+
+# message = input('Please enter your message: ')
+
+# for character in message:
+#  if character in alphabet:
+#    position = alphabet.find(character)
+#    newPosition = (position + key) % 26
+#    newCharacter = alphabet[newPosition]
+#    newMessage += newCharacter
+#  else:
+#    newMessage += character
+  
+# print('Your new message is: ', newMessage) 
+
+
+
+alphabet = 'abcdefghijklmnopqrstuvwxyz'
+names = input('Enter the two names: ')
+score = 0
+for character in names:
+  if character in alphabet:
+    score += 2
+  if character in 'lesbians':
+    score += 11
+  if character in 'gay':
+    score += 4
+  if character in 'love':
+    score -= 3
+total = score
+if total >= 200:
+  print('God Gays')
+elif total >= 100:
+  print('Gay Gays')
+elif total <= 50:
+  print('Good Gays')
+else:
+    print('Not in love :(')
+    
+print('Your love score is: ', score)
+    
+
+
