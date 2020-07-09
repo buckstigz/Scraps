@@ -1,2 +1,2 @@
 # Scraps
-Small scripts for practise
+Small scripts for practising Python
